@@ -20,7 +20,7 @@ spieler = ["Mäthy","Alex","Leo","Leopold","Maxi","Takeshi","Kilian","Marlene","
 #abbruchbedinungen
 
 #maximale Laufzeit der Programms
-laufzeit = 60*5
+laufzeit = 60
 #mind Anzahl an Mitspielern für jeden Spieler 
 mind_anzahl_mitspieler = 9
 #Anzahl an generierten Spielplänen (der aktuellen Stufe) ohne das eine besser Stufe erreicht wurde
