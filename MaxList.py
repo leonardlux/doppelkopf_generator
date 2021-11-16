@@ -18,7 +18,7 @@ class MaxList:
             return
 
         if ((plan.score_primary > self.list[i].score_primary) or
-                (plan.score_primary == self.list[i].score_primary and plan.score_secondary < self.list[i].score_secondary)):
+                (plan.score_primary == self.list[i].score_primary and plan.score_secondary > self.list[i].score_secondary)):
             self.list.insert(i, plan)
             self.list.pop(self.length)
             return
