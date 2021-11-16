@@ -9,6 +9,8 @@ class Plan:
 
     def __init__(self, rounds, num_players):
         self.rounds = rounds
+        self.num_players = num_players
+
+    def evaluate(self):
         self.score_primary = eval_primary(self)
         self.score_secondary = eval_secondary(self)
-        self.num_players = num_players
