@@ -22,3 +22,6 @@ class MaxList:
             self.list.insert(i, plan)
             self.list.pop(self.length)
             return
+    
+    def best(self):
+        return self.list[0]
