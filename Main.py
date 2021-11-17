@@ -12,6 +12,7 @@ from rich.prompt import Prompt, IntPrompt, Confirm
 
 from MaxList import MaxList
 from Plan import Plan
+from Evaluation import maximalPlayerDiversity
 
 
 console.clear()
@@ -23,13 +24,13 @@ player_emojis = [":smile:", ":face_with_tongue:", ":prince:", ":drooling_face:",
 ########################################
 
 while True:
-    # player_names = ["Mäthy","Alex","Leo","Leopold","Maxi","Takeshi","Kilian","Marlene","Paul","Paula","Pascal","Pauline","Thilo"]
-    # num_players = len(player_names)
+    player_names = ["Mäthy","Alex","Leo","Leopold","Maxi","Takeshi","Kilian","Marlene","Paul","Paula","Pascal","Pauline","Thilo"]
+    num_players = len(player_names)
 
-    num_players = IntPrompt.ask("How many [blue]Players")
-    player_names = []
-    for i in range(num_players):
-       player_names.append(Prompt.ask("Player " + str(i+1) + " " + random.choice(player_emojis)))
+    # num_players = IntPrompt.ask("How many [blue]Players")
+    # player_names = []
+    # for i in range(num_players):
+    #    player_names.append(Prompt.ask("Player " + str(i+1) + " " + random.choice(player_emojis)))
     
     if ("Leo" in player_names):
         player_names.remove("Leo")
@@ -109,4 +110,4 @@ for i, r in enumerate(best.rounds):
     table.add_row(str(i+1), *tableStrings)
 
 console.print(table)
-console.print("\n min: {} \t sum: {}".format(best.score_primary, best.score_secondary))
+console.print("\nmin: {} \t max: {} \t avg: {} ".format(best.score_primary, maximalPlayerDiversity(best), best.score_secondary/num_players))

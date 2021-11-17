@@ -1,14 +1,15 @@
 def NumberOfDifferentPlayers(plan, player):
-    notPlayed = list(range(plan.num_players))
+    playedAgainst = []
 
     for round in plan.rounds:
         for table in round:
             if player in table:
                 for p in table:
-                    if p in notPlayed: notPlayed.remove(p)
+                    if not (p in playedAgainst):
+                        playedAgainst.append(p)
                 break
 
-    return plan.num_players - len(notPlayed)
+    return len(playedAgainst) - 1
 
 # fewest number of other players by one player
 def minimalPlayerDiversity(plan):
@@ -20,6 +21,16 @@ def minimalPlayerDiversity(plan):
             min = n
 
     return min
+
+def maximalPlayerDiversity(plan):
+    max = 0
+
+    for player in range(plan.num_players):
+        n = NumberOfDifferentPlayers(plan, player)
+        if n > max:
+            max = n
+
+    return max
 
 # summed up number of different players by each player
 def summedPlayerDiversity(plan):
