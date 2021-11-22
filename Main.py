@@ -27,11 +27,19 @@ while True:
     player_names = ["Mäthy","Alex","Leo","Leopold","Maxi","Takeshi","Kilian","Marlene","Paul","Paula","Pascal","Pauline","Thilo"]
     num_players = len(player_names)
 
-    # num_players = IntPrompt.ask("How many [blue]Players")
-    # player_names = []
-    # for i in range(num_players):
-    #    player_names.append(Prompt.ask("Player " + str(i+1) + " " + random.choice(player_emojis)))
-    
+    num_players = IntPrompt.ask("How many [blue]Players")
+    player_names = []
+
+    i=0
+    while i < num_players:
+        player_name = Prompt.ask("Player " + str(i+1) + " " + random.choice(player_emojis))
+        if player_name in player_names:
+            sys.stdout.write("\033[F") #back to previous line
+            sys.stdout.write("\033[K") #clear line
+            rprint("Name schon vergeben "+ ":confused:")
+        else:
+            player_names.append(player_name)
+            i+=1
     if ("Leo" in player_names):
         player_names.remove("Leo")
         player_names.append(":dolphin:")
