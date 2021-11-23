@@ -1,18 +1,17 @@
 #!/usr/bin/env python
 
 import random
-import time
 import math
 
 from console import console
 
-from rich.progress import Progress
-from rich.table import Table
 from rich.prompt import Prompt, IntPrompt, Confirm
+from rich.live import Live
 
 from MaxList import MaxList
 from Plan import Plan
-from Evaluation import maximalPlayerDiversity
+
+from functions import outputTable, generate_plan, generate_table, get_panels
 
 
 console.clear()
@@ -36,10 +35,12 @@ while True:
         if player_name in player_names:
             sys.stdout.write("\033[F") #back to previous line
             sys.stdout.write("\033[K") #clear line
-            rprint("Name schon vergeben "+ ":confused:")
+            print("Name schon vergeben "+ ":confused:")
         else:
             player_names.append(player_name)
             i+=1
+
+
     if ("Leo" in player_names):
         player_names.remove("Leo")
         player_names.append(":dolphin:")
@@ -54,7 +55,7 @@ while True:
 
     num_results = 1
 
-    loops = IntPrompt.ask("How man [blue]Iterations", default=1000000)
+    loops = IntPrompt.ask("How man [blue]Iterations", default=100000)
 
     if Confirm.ask("Start the Calculation?", default="y"):
         console.clear()
@@ -69,30 +70,22 @@ while True:
 
 candidates = MaxList(num_results)
 
+refreshs = 1000 #How often the console gets updated 
+
 ########################################
 #             Monte Carlo              #
 ########################################
 
+last_i = 0
 try:
-    with Progress() as progress:
+    with Live(get_panels((generate_plan(num_tables,num_rounds,num_players)),player_names,last_i), refresh_per_second=4000) as live:
+        for i in range(loops):
+            
+            candidates.insert(generate_plan(num_tables,num_rounds,num_players))
 
-        task = progress.add_task("[red]Leo's[/red] brain smokes :gear: ", total=loops)
-
-        while not progress.finished:
-            rounds = [[ [] for j in range(num_tables) ] for i in range(num_rounds)]
-
-            for r in range(num_rounds):
-                round = list(range(num_players))
-                random.shuffle(round)
-                for t in range(num_tables * 4):
-                    rounds[r][math.floor(t / 4)].insert(math.floor(t / 4), round[t])
-            p = Plan(rounds, num_players)
-            p.evaluate()
-            candidates.insert(p)
-
-            progress.update(task, advance=1)
-
-        progress.update(task, visible=False)
+            if int(i/loops*refreshs) > last_i:
+                last_i = int(i/loops*refreshs)
+                live.update(get_panels(candidates.best(), player_names,i/loops))
 except KeyboardInterrupt:
     pass
 
@@ -100,22 +93,4 @@ except KeyboardInterrupt:
 #                Output                #
 ########################################
 
-best = candidates.best()
-
-table = Table()
-
-table.add_column("#", justify="center")
-for t in range(num_tables):
-    table.add_column("Table " + str(t+1), justify="center")
-
-for i, r in enumerate(best.rounds):
-    tableStrings = [""] * num_tables
-    for t in range(num_tables):
-        for p in r[t]:
-            tableStrings[t] += player_names[p] + " "
-        tableStrings[t].strip()
-
-    table.add_row(str(i+1), *tableStrings)
-
-console.print(table)
-console.print("\nmin: {} \t max: {} \t avg: {} ".format(best.score_primary, maximalPlayerDiversity(best), best.score_secondary/num_players))
+outputTable(candidates.best(),player_names)
